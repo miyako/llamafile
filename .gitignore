@@ -1,3 +1,5 @@
 llamafile/userPreferences.*
 llamafile/Data/*
 llamafile/Project/DerivedData/*
+llamafile/Resources/bin/.llamafile/*
+llamafile/Resources/bin/.ape-1.10*
