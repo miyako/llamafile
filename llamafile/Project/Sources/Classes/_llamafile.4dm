@@ -22,6 +22,7 @@ Function start($option : Object) : 4D:C1709.SystemWorker
 	$command:=This:C1470.escape(This:C1470.executablePath)
 	
 	$command+=" --server --v2 "
+	//$command+=" --server "
 	
 	Case of 
 		: (Value type:C1509($option.model)=Is object:K8:27) && (OB Instance of:C1731($option.model; 4D:C1709.File)) && ($option.model.exists)
@@ -29,9 +30,9 @@ Function start($option : Object) : 4D:C1709.SystemWorker
 			$command+=This:C1470.escape(This:C1470.expand($option.model).path)
 	End case 
 	
-	//If (Value type($option.port)=Is real) && ($option.port>0)
-	//$command+=" --listen "+String($option.port)
-	//End if 
+	If (Value type:C1509($option.port)=Is real:K8:4) && ($option.port>0)
+		$command+=" --listen 0.0.0.0:"+String:C10($option.port)
+	End if 
 	
 	var $arg : Object
 	var $valueType : Integer
@@ -39,7 +40,8 @@ Function start($option : Object) : 4D:C1709.SystemWorker
 	
 	For each ($arg; OB Entries:C1720($option))
 		Case of 
-			: (["v2"; "server"; "model"; "port"; "listen"; \
+			: (["v2"; "server"; "model"; \
+				"port"; "listen"; "alias"; \
 				"chat"; \
 				"cli"].includes($arg.key))
 				continue
