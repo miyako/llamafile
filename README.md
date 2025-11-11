@@ -10,7 +10,29 @@ When `--server` is passed, `llamafile` seems to become `llamafiler`. However in 
 
 ## Usage
 
+* 4d
+
 ```4d
+var $llamafile : cs.llamafile.server
+$llamafile:=cs.llamafile.server.new()
+$isRunning:=$llamafile.isRunning()
+$file:=File("/Users/miyako/Library/Application Support/nomic.ai/GPT4All/DeepSeek-R1-Distill-Qwen-1.5B-Q4_0.gguf")
+$llamafile.start({model: $file; port: 8080})
+```
+
+* 4dm
+
+```4dm
+var $llamafile : cs.llamafile.server
+$llamafile:=cs.llamafile.server.new()
+$isRunning:=$llamafile.isRunning()
+$file:=File("/Users/miyako/Library/Application Support/nomic.ai/GPT4All/DeepSeek-R1-Distill-Qwen-1.5B-Q4_0.gguf")
+$llamafile.start({model: $file; port: 8080})
+```
+
+* nothing
+
+```
 var $llamafile : cs.llamafile.server
 $llamafile:=cs.llamafile.server.new()
 $isRunning:=$llamafile.isRunning()
