@@ -38,7 +38,7 @@ Else
     End case 
     var $port : Integer
     $port:=8080
-    $llama:=cs.llamafile.llamafile.new($port; $file; $URL; {})
+    $llama:=cs.llamafile.llamafile.new($port; $file; $URL)
 End if
 ```
 
