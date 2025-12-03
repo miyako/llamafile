@@ -5,7 +5,7 @@ If (True:C214)
 	$llama:=cs:C1710.llamafile.new()  //default
 Else 
 	var $modelsFolder : 4D:C1709.Folder
-	$modelsFolder:=Folder:C1567(fk home folder:K87:24).folder(".llama-cpp")
+	$modelsFolder:=Folder:C1567(fk home folder:K87:24).folder(".llamafile")
 	var $lang; $URL : Text
 	var $file : 4D:C1709.File
 	$lang:=Get database localization:C1009(Current localization:K5:22)
