@@ -31,7 +31,7 @@ Function start($option : Object) : 4D:C1709.SystemWorker
 			: (["v2"; "server"; "model"; \
 				"port"; "listen"; "alias"; \
 				"chat"; \
-				"cli"].includes($arg.key))
+				"cli"; "embeddings"; "embedding"].includes($arg.key))
 				continue
 		End case 
 		$valueType:=Value type:C1509($arg.value)

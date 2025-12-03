@@ -15,7 +15,6 @@ Class constructor($port : Integer; $file : 4D:C1709.File; $URL : Text; $options 
 	This:C1470.dataType:="blob"
 	This:C1470.automaticRedirections:=True:C214
 	This:C1470.options:=$options#Null:C1517 ? $options : {}
-	This:C1470.options.embeddings:=True:C214
 	This:C1470.options.port:=$port
 	This:C1470.options.model:=$file
 	
