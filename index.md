@@ -24,7 +24,7 @@ If (True)
     $llama:=cs.llamafile.llamafile.new()  //default
 Else 
     var $modelsFolder : 4D.Folder
-    $modelsFolder:=Folder(fk home folder).folder(".llama-cpp")
+    $modelsFolder:=Folder(fk home folder).folder(".llamafile")
     var $lang; $URL : Text
     var $file : 4D.File
     $lang:=Get database localization(Current localization)
