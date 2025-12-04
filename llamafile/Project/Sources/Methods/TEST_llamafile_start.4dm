@@ -1,7 +1,7 @@
 //%attributes = {"invisible":true}
 var $llama : cs:C1710.llamafile
 
-If (True:C214)
+If (False:C215)
 	$llama:=cs:C1710.llamafile.new()  //default
 Else 
 	var $modelsFolder : 4D:C1709.Folder
@@ -19,5 +19,5 @@ Else
 	End case 
 	var $port : Integer
 	$port:=8080
-	$llama:=cs:C1710.llamafile.new($port; $file; $URL)
+	$llama:=cs:C1710.llamafile.new($port; $file; $URL; Formula:C1597(ALERT:C41(This:C1470.file.name+($1.success ? " started!" : " did not start..."))))
 End if 

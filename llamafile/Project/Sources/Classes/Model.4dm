@@ -4,9 +4,10 @@ property headers : Object
 property dataType : Text
 property automaticRedirections : Boolean
 property file : 4D:C1709.File
-property options : Object
+property port : Integer
+property _onResponse : 4D:C1709.Function
 
-Class constructor($port : Integer; $file : 4D:C1709.File; $URL : Text; $options : Object)
+Class constructor($port : Integer; $file : 4D:C1709.File; $URL : Text; $formula : 4D:C1709.Function)
 	
 	This:C1470.file:=$file
 	This:C1470.URL:=$URL
@@ -14,9 +15,9 @@ Class constructor($port : Integer; $file : 4D:C1709.File; $URL : Text; $options 
 	This:C1470.headers:={Accept: "application/vnd.github+json"}
 	This:C1470.dataType:="blob"
 	This:C1470.automaticRedirections:=True:C214
-	This:C1470.options:=$options#Null:C1517 ? $options : {}
-	This:C1470.options.port:=$port
-	This:C1470.options.model:=$file
+	This:C1470.options:={}
+	This:C1470.port:=$port
+	This:C1470._onResponse:=$formula
 	
 	If (OB Instance of:C1731(This:C1470.file; 4D:C1709.File))
 		If (Not:C34(This:C1470.file.exists))
@@ -34,7 +35,11 @@ Function start()
 	var $llama : cs:C1710._worker
 	$llama:=cs:C1710._worker.new()
 	
-	$llama.start(This:C1470.options)
+	$llama.start({port: This:C1470.port; model: This:C1470.file})
+	
+	If (Value type:C1509(This:C1470._onResponse)=Is object:K8:27) && (OB Instance of:C1731(This:C1470._onResponse; 4D:C1709.Function))
+		This:C1470._onResponse.call(This:C1470; {success: True:C214})
+	End if 
 	
 	KILL WORKER:C1390
 	
@@ -46,3 +51,7 @@ Function onResponse($request : 4D:C1709.HTTPRequest; $event : Object)
 	End if 
 	
 Function onError($request : 4D:C1709.HTTPRequest; $event : Object)
+	
+	If (Value type:C1509(This:C1470._onResponse)=Is object:K8:27) && (OB Instance of:C1731(This:C1470._onResponse; 4D:C1709.Function))
+		This:C1470._onResponse.call(This:C1470; {success: False:C215})
+	End if 
