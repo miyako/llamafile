@@ -38,7 +38,7 @@ Else
     End case 
     var $port : Integer
     $port:=8080
-    $llama:=cs.llamafile.new($port; $file; $URL; Formula(ALERT(This.file.name+($1.success ? " started!" : " did not start..."))))
+    $llama:=cs.llamafile.llamafile.new($port; $file; $URL; Formula(ALERT(This.file.name+($1.success ? " started!" : " did not start..."))))
 End if
 ```
 
