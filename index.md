@@ -45,7 +45,7 @@ End if
 Unless the server is already running (in which case the costructor does nothing), the following procedure runs in the background:
 
 1. The specified model is download via HTTP
-2. The `llamafiler` program is started
+2. The `llamafiler` program is started (the process name is `.ape-1.10`)
 
 Now you can test the server:
 
