@@ -1,4 +1,3 @@
-//%attributes = {"invisible":true}
 var $llama : cs:C1710.llamafile
 
 If (False:C215)
@@ -19,5 +18,15 @@ Else
 	End case 
 	var $port : Integer
 	$port:=8080
-	$llama:=cs:C1710.llamafile.new($port; $file; $URL; Formula:C1597(ALERT:C41(This:C1470.file.name+($1.success ? " started!" : " did not start..."))))
+	
+	var $event : cs:C1710.llamaEvent
+	$event:=cs:C1710.llamaEvent.new()
+/*
+Function onError($params : Object; $error : cs._error)
+Function onSuccess($params : Object)
+*/
+	$event.onError:=Formula:C1597(ALERT:C41($2.message))
+	$event.onSuccess:=Formula:C1597(ALERT:C41(This:C1470.file.name+" loaded!"))
+	
+	$llama:=cs:C1710.llamafile.new($port; $file; $URL; $event)
 End if 
