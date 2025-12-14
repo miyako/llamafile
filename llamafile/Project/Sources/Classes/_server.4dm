@@ -6,6 +6,23 @@ Class constructor($controller : 4D:C1709.Class)
 	
 Function start($option : Object) : 4D:C1709.SystemWorker
 	
+	$modelsFolder:=Folder:C1567(fk home folder:K87:24).folder(".llamafile")
+	$copyFolder:=$modelsFolder.folder(String:C10($option.port))
+	$copyFolder.create()
+	var $that : 4D:C1709.File
+	$that:=$copyFolder.file(This:C1470.executableFile.fullName)
+	If (Not:C34($that.exists))
+		$that:=This:C1470.executableFile.copyTo($copyFolder)
+	End if 
+	This:C1470.controller.currentDirectory:=$that.parent
+	This:C1470._executableFile:=$that
+	Case of 
+		: (Is macOS:C1572)
+			This:C1470._executablePath:=This:C1470.controller.currentDirectory.file(This:C1470.executableName).path
+		: (Is Windows:C1573)
+			This:C1470._executablePath:=This:C1470.controller.currentDirectory.file(This:C1470.executableName).platformPath
+	End case 
+	
 	var $command : Text
 	$command:=This:C1470.escape(This:C1470.executablePath)
 	
@@ -48,7 +65,7 @@ Function start($option : Object) : 4D:C1709.SystemWorker
 		End case 
 	End for each 
 	
-	//SET TEXT TO PASTEBOARD($command)
+	SET TEXT TO PASTEBOARD:C523($command)
 	
 	return This:C1470.controller.execute($command; $isStream ? $option.model : Null:C1517; $option.data).worker
 	

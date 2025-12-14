@@ -24,7 +24,7 @@ Class constructor($port : Integer; $file : 4D:C1709.File; $URL : Text; $event : 
 			$port:=8080
 		End if 
 		
-		This:C1470.main($port; $file; $URL; {}; $event)
+		This:C1470.main($port; $file; $URL; $event)
 		
 	End if 
 	
@@ -52,9 +52,9 @@ Function onTCP($status : Object; $options : Object)
 		
 	End if 
 	
-Function main($port : Integer; $file : 4D:C1709.File; $URL : Text; $options : Object; $event : cs:C1710._event)
+Function main($port : Integer; $file : 4D:C1709.File; $URL : Text; $event : cs:C1710._event)
 	
-	main({port: $port; file: $file; URL: $URL; options: $options; event: $event}; This:C1470.onTCP)
+	main({port: $port; file: $file; URL: $URL; event: $event}; This:C1470.onTCP)
 	
 Function terminate()
 	

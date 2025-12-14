@@ -38,8 +38,8 @@ embeddings
 chat completion (with images)
 */
 	
-	$file:=$homeFolder.file("Qwen2-VL-2B-Instruct-Q4_K_M")
-	$URL:="https://huggingface.co/bartowski/Qwen2-VL-2B-Instruct-GGUF/resolve/main/Qwen2-VL-2B-Instruct-Q4_K_M.gguf"
+	$file:=$homeFolder.file("Llama-3.1-8B-Instruct-Q4_K_M.gguf")
+	$URL:="https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"
 	$port:=8081
 	$llama:=cs:C1710.llamafile.new($port; $file; $URL; $event)
 	
