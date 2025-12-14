@@ -18,26 +18,16 @@ layout: default
 Instantiate `cs.llamafile.llamafile` in your *On Startup* database method:
 
 ```4d
-var $llama : cs.llamafile
+var $llama : cs.llamafile.llamafile
 
 If (False)
     $llama:=cs.llamafile.llamafile.new()  //default
 Else 
     var $homeFolder : 4D.Folder
     $homeFolder:=Folder(fk home folder).folder(".llamafile")
-    var $lang; $URL : Text
+    var $URL : Text
     var $file : 4D.File
-    $lang:=Get database localization(Current localization)
-    Case of 
-        : ($lang="ja")
-            $file:=$homeFolder.file("Llama-3-ELYZA-JP-8B-q4_k_m.gguf")
-            $URL:="https://huggingface.co/elyza/Llama-3-ELYZA-JP-8B-GGUF/resolve/main/Llama-3-ELYZA-JP-8B-q4_k_m.gguf"
-        Else 
-            $file:=$homeFolder.file("nomic-embed-text-v1.5.f16.gguf")
-            $URL:="https://huggingface.co/nomic-ai/nomic-embed-text-v1.5-GGUF/resolve/main/nomic-embed-text-v1.5.f16.gguf"
-    End case 
     var $port : Integer
-    $port:=8080
     
     var $event : cs.llamafile.llamaEvent
     $event:=cs.llamafile.llamaEvent.new()
@@ -52,14 +42,17 @@ Else
         embeddings
     */
     
+    $file:=$homeFolder.file("nomic-embed-text-v1.5.f16.gguf")
+    $URL:="https://huggingface.co/nomic-ai/nomic-embed-text-v1.5-GGUF/resolve/main/nomic-embed-text-v1.5.f16.gguf"
+    $port:=8080
     $llama:=cs.llamafile.llamafile.new($port; $file; $URL; $event)
     
     /*
         chat completion (with images)
     */
     
-    $file:=$homeFolder.file("Qwen2-VL-2B-Instruct-Q4_K_M")
-    $URL:="https://huggingface.co/bartowski/Qwen2-VL-2B-Instruct-GGUF/resolve/main/Qwen2-VL-2B-Instruct-Q4_K_M.gguf"
+    $file:=$homeFolder.file("Llama-3.1-8B-Instruct-Q4_K_M.gguf")
+    $URL:="https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"
     $port:=8081
     $llama:=cs.llamafile.llamafile.new($port; $file; $URL; $event)
     
