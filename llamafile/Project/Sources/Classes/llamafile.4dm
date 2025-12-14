@@ -1,4 +1,4 @@
-Class constructor($port : Integer; $file : 4D:C1709.File; $URL : Text; $options : Object; $event : cs:C1710._event)
+Class constructor($port : Integer; $file : 4D:C1709.File; $URL : Text; $event : cs:C1710._event)
 	
 	var $llama : cs:C1710.workers.worker
 	$llama:=cs:C1710.workers.worker.new(cs:C1710._server)
@@ -24,7 +24,7 @@ Class constructor($port : Integer; $file : 4D:C1709.File; $URL : Text; $options 
 			$port:=8080
 		End if 
 		
-		This:C1470.main($port; $file; $URL; $options; $event)
+		This:C1470.main($port; $file; $URL; {}; $event)
 		
 	End if 
 	
