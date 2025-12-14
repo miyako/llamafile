@@ -7,7 +7,7 @@ Class constructor($controller : 4D:C1709.Class)
 Function start($option : Object) : 4D:C1709.SystemWorker
 	
 	$modelsFolder:=Folder:C1567(fk home folder:K87:24).folder(".llamafile")
-	$copyFolder:=$modelsFolder.folder(String:C10($option.port))
+	$copyFolder:=$modelsFolder
 	$copyFolder.create()
 	var $that : 4D:C1709.File
 	$that:=$copyFolder.file(This:C1470.executableFile.fullName)
