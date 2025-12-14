@@ -18,28 +18,52 @@ layout: default
 Instantiate `cs.llamafile.llamafile` in your *On Startup* database method:
 
 ```4d
-var $llama : cs.llamafile.llamafile
+var $llama : cs.llamafile
 
-If (True)
+If (False)
     $llama:=cs.llamafile.llamafile.new()  //default
 Else 
-    var $modelsFolder : 4D.Folder
-    $modelsFolder:=Folder(fk home folder).folder(".llamafile")
+    var $homeFolder : 4D.Folder
+    $homeFolder:=Folder(fk home folder).folder(".llamafile")
     var $lang; $URL : Text
     var $file : 4D.File
     $lang:=Get database localization(Current localization)
     Case of 
         : ($lang="ja")
-            $file:=$modelsFolder.file("Llama-3-ELYZA-JP-8B-q4_k_m.gguf")
+            $file:=$homeFolder.file("Llama-3-ELYZA-JP-8B-q4_k_m.gguf")
             $URL:="https://huggingface.co/elyza/Llama-3-ELYZA-JP-8B-GGUF/resolve/main/Llama-3-ELYZA-JP-8B-q4_k_m.gguf"
         Else 
-            $file:=$modelsFolder.file("nomic-embed-text-v1.5.f16.gguf")
+            $file:=$homeFolder.file("nomic-embed-text-v1.5.f16.gguf")
             $URL:="https://huggingface.co/nomic-ai/nomic-embed-text-v1.5-GGUF/resolve/main/nomic-embed-text-v1.5.f16.gguf"
     End case 
     var $port : Integer
     $port:=8080
-    $llama:=cs.llamafile.llamafile.new($port; $file; $URL; Formula(ALERT(This.file.name+($1.success ? " started!" : " did not start..."))))
-End if
+    
+    var $event : cs.llamafile.llamaEvent
+    $event:=cs.llamafile.llamaEvent.new()
+    /*
+        Function onError($params : Object; $error : cs._error)
+        Function onSuccess($params : Object)
+    */
+    $event.onError:=Formula(ALERT($2.message))
+    $event.onSuccess:=Formula(ALERT(This.file.name+" loaded!"))
+    
+    /*
+        embeddings
+    */
+    
+    $llama:=cs.llamafile.llamafile.new($port; $file; $URL; $event)
+    
+    /*
+        chat completion (with images)
+    */
+    
+    $file:=$homeFolder.file("Qwen2-VL-2B-Instruct-Q4_K_M")
+    $URL:="https://huggingface.co/bartowski/Qwen2-VL-2B-Instruct-GGUF/resolve/main/Qwen2-VL-2B-Instruct-Q4_K_M.gguf"
+    $port:=8081
+    $llama:=cs.llamafile.llamafile.new($port; $file; $URL; $event)
+    
+End if 
 ```
 
 Unless the server is already running (in which case the costructor does nothing), the following procedure runs in the background:

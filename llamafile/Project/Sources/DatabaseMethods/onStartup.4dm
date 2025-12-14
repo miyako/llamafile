@@ -3,17 +3,17 @@ var $llama : cs:C1710.llamafile
 If (False:C215)
 	$llama:=cs:C1710.llamafile.new()  //default
 Else 
-	var $modelsFolder : 4D:C1709.Folder
-	$modelsFolder:=Folder:C1567(fk home folder:K87:24).folder(".llamafile")
+	var $homeFolder : 4D:C1709.Folder
+	$homeFolder:=Folder:C1567(fk home folder:K87:24).folder(".llamafile")
 	var $lang; $URL : Text
 	var $file : 4D:C1709.File
 	$lang:=Get database localization:C1009(Current localization:K5:22)
 	Case of 
 		: ($lang="ja")
-			$file:=$modelsFolder.file("Llama-3-ELYZA-JP-8B-q4_k_m.gguf")
+			$file:=$homeFolder.file("Llama-3-ELYZA-JP-8B-q4_k_m.gguf")
 			$URL:="https://huggingface.co/elyza/Llama-3-ELYZA-JP-8B-GGUF/resolve/main/Llama-3-ELYZA-JP-8B-q4_k_m.gguf"
 		Else 
-			$file:=$modelsFolder.file("nomic-embed-text-v1.5.f16.gguf")
+			$file:=$homeFolder.file("nomic-embed-text-v1.5.f16.gguf")
 			$URL:="https://huggingface.co/nomic-ai/nomic-embed-text-v1.5-GGUF/resolve/main/nomic-embed-text-v1.5.f16.gguf"
 	End case 
 	var $port : Integer
@@ -28,5 +28,19 @@ Function onSuccess($params : Object)
 	$event.onError:=Formula:C1597(ALERT:C41($2.message))
 	$event.onSuccess:=Formula:C1597(ALERT:C41(This:C1470.file.name+" loaded!"))
 	
+/*
+embeddings
+*/
+	
 	$llama:=cs:C1710.llamafile.new($port; $file; $URL; $event)
+	
+/*
+chat completion (with images)
+*/
+	
+	$file:=$homeFolder.file("Qwen2-VL-2B-Instruct-Q4_K_M")
+	$URL:="https://huggingface.co/bartowski/Qwen2-VL-2B-Instruct-GGUF/resolve/main/Qwen2-VL-2B-Instruct-Q4_K_M.gguf"
+	$port:=8081
+	$llama:=cs:C1710.llamafile.new($port; $file; $URL; $event)
+	
 End if 
