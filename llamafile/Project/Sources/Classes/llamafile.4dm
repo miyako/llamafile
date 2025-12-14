@@ -6,6 +6,8 @@ Class constructor($port : Integer; $file : 4D:C1709.File; $URL : Text; $event : 
 	If (Not:C34($llama.isRunning()))
 		
 		If (Value type:C1509($file)#Is object:K8:27) || (Not:C34(OB Instance of:C1731($file; 4D:C1709.File))) || ($URL="")
+			var $homeFolder : 4D:C1709.Folder
+			$homeFolder:=Folder:C1567(fk home folder:K87:24).folder(".llamafile")
 			$file:=$homeFolder.file("nomic-embed-text-v1.5.f16.gguf")
 			$URL:="https://huggingface.co/nomic-ai/nomic-embed-text-v1.5-GGUF/resolve/main/nomic-embed-text-v1.5.f16.gguf"
 		End if 
