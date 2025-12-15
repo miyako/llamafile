@@ -8,8 +8,25 @@ Class constructor($port : Integer; $file : 4D:C1709.File; $URL : Text; $event : 
 		If (Value type:C1509($file)#Is object:K8:27) || (Not:C34(OB Instance of:C1731($file; 4D:C1709.File))) || ($URL="")
 			var $homeFolder : 4D:C1709.Folder
 			$homeFolder:=Folder:C1567(fk home folder:K87:24).folder(".llamafile")
-			$file:=$homeFolder.file("nomic-embed-text-v1.5.f16.gguf")
-			$URL:="https://huggingface.co/nomic-ai/nomic-embed-text-v1.5-GGUF/resolve/main/nomic-embed-text-v1.5.f16.gguf"
+			
+/*
+embeddings
+*/
+			
+			$file:=$homeFolder.file("nomic-embed-text-v1.Q8_0.gguf")
+			$URL:="https://huggingface.co/nomic-ai/nomic-embed-text-v1-GGUF/resolve/main/nomic-embed-text-v1.Q8_0.gguf"
+			$port:=8080
+			$llamafile:=cs:C1710.llamafile.new($port; $file; $URL; $event)
+			
+/*
+chat completion (with images)
+*/
+			
+			$file:=$homeFolder.file("Qwen2-VL-2B-Instruct-Q4_K_M")
+			$URL:="https://huggingface.co/bartowski/Qwen2-VL-2B-Instruct-GGUF/resolve/main/Qwen2-VL-2B-Instruct-Q4_K_M.gguf"
+			$port:=8081
+			$llamafile:=cs:C1710.llamafile.new($port; $file; $URL; $event)
+			
 		End if 
 		
 		If ($port=0) || ($port<0) || ($port>65535)

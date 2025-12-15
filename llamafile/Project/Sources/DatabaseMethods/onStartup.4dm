@@ -22,18 +22,18 @@ Function onSuccess($params : Object)
 embeddings
 */
 	
-	$file:=$homeFolder.file("nomic-embed-text-v1.5.f16.gguf")
-	$URL:="https://huggingface.co/nomic-ai/nomic-embed-text-v1.5-GGUF/resolve/main/nomic-embed-text-v1.5.f16.gguf"
+	$file:=$homeFolder.file("nomic-embed-text-v1.Q8_0.gguf")
+	$URL:="https://huggingface.co/nomic-ai/nomic-embed-text-v1-GGUF/resolve/main/nomic-embed-text-v1.Q8_0.gguf"
 	$port:=8080
-	$llama:=cs:C1710.llamafile.new($port; $file; $URL; $event)
+	$llamafile:=cs:C1710.llamafile.new($port; $file; $URL; $event)
 	
 /*
 chat completion (with images)
 */
 	
-	$file:=$homeFolder.file("Llama-3.1-8B-Instruct-Q4_K_M.gguf")
-	$URL:="https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"
+	$file:=$homeFolder.file("Qwen2-VL-2B-Instruct-Q4_K_M")
+	$URL:="https://huggingface.co/bartowski/Qwen2-VL-2B-Instruct-GGUF/resolve/main/Qwen2-VL-2B-Instruct-Q4_K_M.gguf"
 	$port:=8081
-	$llama:=cs:C1710.llamafile.new($port; $file; $URL; $event)
+	$llamafile:=cs:C1710.llamafile.new($port; $file; $URL; $event)
 	
 End if 
