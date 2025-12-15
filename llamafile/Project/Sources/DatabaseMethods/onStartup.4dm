@@ -31,8 +31,6 @@ embeddings
 chat completion (with images)
 */
 	
-	//Qwen2-VL-2B-Instruct-Q4_K_M is not supported
-	
 	$file:=$homeFolder.file("Llama-3.1-8B-Instruct-Q4_K_M.gguf")
 	$URL:="https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"
 	$port:=8081
