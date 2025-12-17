@@ -18,55 +18,16 @@ layout: default
 Instantiate `cs.llamafile.llamafile` in your *On Startup* database method:
 
 ```4d
-var $LlamaEdge : cs.LlamaEdge.LlamaEdge
+var $llama : cs.llamafile
 
 If (False)
-    $LlamaEdge:=cs.LlamaEdge.LlamaEdge.new()  //default
+    $llama:=cs.llamafile.llamafile.new()  //default
 Else 
     var $homeFolder : 4D.Folder
-    $homeFolder:=Folder(fk home folder).folder(".LlamaEdge")
-    var $model : cs.LlamaEdgeModel
-    var $file : 4D.File
+    $homeFolder:=Folder(fk home folder).folder(".llamafile")
     var $URL : Text
-    var $prompt_template : Text
-    var $ctx_size : Integer
-    
-    var $models : Collection
-    $models:=[]
-    
-    /*
-        if file doesn't exist, it is downloaded from URL 
-        paths are relative to $home which is mapped to . in wasm
-    */
-    
-    //#1 is chat model
-    
-    $file:=$homeFolder.file("llama/Llama-3.2-3B-Instruct-Q4_K_M.gguf")
-    $URL:="https://huggingface.co/second-state/Llama-3.2-3B-Instruct-GGUF/resolve/main/Llama-3.2-3B-Instruct-Q4_K_M.gguf"
-    $path:="./.LlamaEdge/llama/"+$file.fullName
-    $prompt_template:="llama-3-chat"
-    $ctx_size:=4096
-    $model_name:="llama"
-    $model_alias:="default"
-    
-    $model:=cs.LlamaEdgeModel.new($file; $URL; $path; $prompt_template; $ctx_size; $model_name; $model_alias)
-    $models.push($model)
-    
-    //#2 is embedding model
-    
-    $file:=$homeFolder.file("nomic-ai/nomic-embed-text-v2-moe.Q5_K_M.gguf")
-    $URL:="https://huggingface.co/nomic-ai/nomic-embed-text-v2-moe-GGUF/resolve/main/nomic-embed-text-v2-moe.Q5_K_M.gguf"
-    $path:="./.LlamaEdge/nomic-ai/"+$file.fullName
-    $prompt_template:="embedding"
-    $ctx_size:=512
-    $model_name:="nomic"
-    $model_alias:="embedding"
-    
-    $model:=cs.LlamaEdgeModel.new($file; $URL; $path; $prompt_template; $ctx_size; $model_name; $model_alias)
-    $models.push($model)
-    
+    var $file : 4D.File
     var $port : Integer
-    $port:=8080
     
     var $event : cs.event.event
     $event:=cs.event.event.new()
@@ -79,7 +40,23 @@ Else
     $event.onData:=Formula(MESSAGE(String((This.range.end/This.range.length)*100; "###.00%")))  //onData@4D.HTTPRequest
     $event.onResponse:=Formula(ERASE WINDOW)  //onResponse@4D.HTTPRequest
     
-    $LlamaEdge:=cs.LlamaEdge.LlamaEdge.new($port; $models; {home: $homeFolder}; $event)
+    /*
+        embeddings
+    */
+    
+    $file:=$homeFolder.file("nomic-embed-text-v1.Q8_0.gguf")
+    $URL:="https://huggingface.co/nomic-ai/nomic-embed-text-v1-GGUF/resolve/main/nomic-embed-text-v1.Q8_0.gguf"
+    $port:=8080
+    $llamafile:=cs.llamafile.llamafile.new($port; $file; $URL; $event)
+    
+    /*
+        chat completion (with images)
+    */
+    
+    $file:=$homeFolder.file("Llama-3.1-8B-Instruct-Q4_K_M.gguf")
+    $URL:="https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"
+    $port:=8081
+    $llamafile:=cs.llamafile.llamafile.new($port; $file; $URL; $event)
     
 End if 
 ```
