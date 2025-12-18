@@ -6,6 +6,8 @@ Class constructor($controller : 4D:C1709.Class)
 	
 Function start($option : Object) : 4D:C1709.SystemWorker
 	
+	This:C1470.bind($option; ["port"; "onStdOut"; "onStdErr"; "onTerminate"])
+	
 	$modelsFolder:=Folder:C1567(fk home folder:K87:24).folder(".llamafile")
 	$copyFolder:=$modelsFolder
 	$copyFolder.create()
@@ -48,7 +50,7 @@ Function start($option : Object) : 4D:C1709.SystemWorker
 			: (["v2"; "server"; "model"; \
 				"port"; "listen"; "alias"; \
 				"chat"; \
-				"cli"; "embeddings"; "embedding"].includes($arg.key))
+				"cli"; "embeddings"; "embedding"; "help"; "version"].includes($arg.key))
 				continue
 		End case 
 		$valueType:=Value type:C1509($arg.value)
