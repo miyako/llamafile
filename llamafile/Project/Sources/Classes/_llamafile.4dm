@@ -13,7 +13,7 @@ Class constructor($controller : 4D:C1709.Class)
 	
 	Super:C1705("llamafiler"; $controller)
 	
-Function bind($option : Object; $properties : Collection) : cs:C1710._CTranslate2
+Function bind($option : Object; $properties : Collection) : cs:C1710._llamafile
 	
 	var $property : Text
 	For each ($property; $properties)
