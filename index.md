@@ -18,7 +18,7 @@ layout: default
 Instantiate `cs.llamafile.llamafile` in your *On Startup* database method:
 
 ```4d
-var $llama : cs.llamafile
+var $llama : cs.llamafile.llamafile
 
 If (False)
     $llama:=cs.llamafile.llamafile.new()  //default
@@ -34,11 +34,20 @@ Else
     /*
         Function onError($params : Object; $error : cs.event.error)
         Function onSuccess($params : Object; $models : cs.event.models)
+        Function onData($request : 4D.HTTPRequest; $event : Object)
+        Function onResponse($request : 4D.HTTPRequest; $event : Object)
+        Function onTerminate($worker : 4D.SystemWorker; $params : Object)
+        Function onStdOut($worker : 4D.SystemWorker; $params : Object)
+        Function onStdErr($worker : 4D.SystemWorker; $params : Object)
     */
+    
     $event.onError:=Formula(ALERT($2.message))
     $event.onSuccess:=Formula(ALERT($2.models.extract("name").join(",")+" loaded!"))
-    $event.onData:=Formula(MESSAGE(String((This.range.end/This.range.length)*100; "###.00%")))  //onData@4D.HTTPRequest
-    $event.onResponse:=Formula(ERASE WINDOW)  //onResponse@4D.HTTPRequest
+    $event.onData:=Formula(LOG EVENT(Into 4D debug message; "download:"+String((This.range.end/This.range.length)*100; "###.00%")))
+    $event.onResponse:=Formula(LOG EVENT(Into 4D debug message; "download complete"))
+    $event.onStdOut:=Formula(LOG EVENT(Into 4D debug message; "out:"+$2.data))
+    $event.onStdErr:=Formula(LOG EVENT(Into 4D debug message; "err:"+$2.data))
+    $event.onTerminate:=Formula(LOG EVENT(Into 4D debug message; (["process"; $1.pid; "terminated!"].join(" "))))
     
     /*
         embeddings
@@ -46,7 +55,7 @@ Else
     
     $file:=$homeFolder.file("nomic-embed-text-v1.Q8_0.gguf")
     $URL:="https://huggingface.co/nomic-ai/nomic-embed-text-v1-GGUF/resolve/main/nomic-embed-text-v1.Q8_0.gguf"
-    $port:=8080
+    $port:=8086
     $llamafile:=cs.llamafile.llamafile.new($port; $file; $URL; $event)
     
     /*
@@ -55,7 +64,7 @@ Else
     
     $file:=$homeFolder.file("Llama-3.1-8B-Instruct-Q4_K_M.gguf")
     $URL:="https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"
-    $port:=8081
+    $port:=8087
     $llamafile:=cs.llamafile.llamafile.new($port; $file; $URL; $event)
     
 End if 
