@@ -6,7 +6,7 @@ Class constructor($controller : 4D:C1709.Class)
 	
 Function start($option : Object) : 4D:C1709.SystemWorker
 	
-	This:C1470.bind($option; ["port"; "onStdOut"; "onStdErr"; "onTerminate"])
+	This:C1470.bind($option; ["onTerminate"])
 	
 	$modelsFolder:=Folder:C1567(fk home folder:K87:24).folder(".llamafile")
 	$copyFolder:=$modelsFolder
