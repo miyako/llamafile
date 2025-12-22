@@ -5,7 +5,7 @@ property onTerminate : 4D:C1709.Function
 
 Class extends _CLI
 
-Class constructor($controller : 4D:C1709.Class)
+Class constructor($class : 4D:C1709.Class)
 	
 	var $controller : 4D:C1709.Class
 	var $superclass : 4D:C1709.Class
