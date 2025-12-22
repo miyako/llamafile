@@ -7,13 +7,22 @@ Class extends _CLI
 
 Class constructor($controller : 4D:C1709.Class)
 	
-	If (Not:C34(OB Instance of:C1731($controller; cs:C1710._llamafile_Controller)))
-		$controller:=cs:C1710._llamafile_Controller
-	End if 
+	var $controller : 4D:C1709.Class
+	var $superclass : 4D:C1709.Class
+	$superclass:=$class.superclass
+	$controller:=cs:C1710._llamafile_Controller
+	
+	While ($superclass#Null:C1517)
+		If ($superclass=$controller)
+			$controller:=$class
+			break
+		End if 
+		$superclass:=$superclass.superclass
+	End while 
 	
 	Super:C1705("llamafiler"; $controller)
 	
-Function bind($option : Object; $properties : Collection) : cs:C1710._llamafile
+Function bind($option : Object; $properties : Collection) : cs:C1710._CLI
 	
 	var $property : Text
 	For each ($property; $properties)
