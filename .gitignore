@@ -4,3 +4,5 @@ llamafile/Project/DerivedData/*
 llamafile/Resources/bin/.llamafile/*
 llamafile/Resources/bin/.ape-1.10*
 llamafile/Resources/bin/llamafile
+llamafile/Libraries/lib4d-arm64.dylib
+llamafile/Resources/en.lproj/syntaxEN.json
