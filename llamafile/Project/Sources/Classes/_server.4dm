@@ -8,6 +8,7 @@ Function start($option : Object) : 4D:C1709.SystemWorker
 	
 	This:C1470.bind($option; ["onTerminate"])
 	
+	var $modelsFolder; $copyFolder : 4D:C1709.Folder
 	$modelsFolder:=Folder:C1567(fk home folder:K87:24).folder(".llamafile")
 	$copyFolder:=$modelsFolder
 	$copyFolder.create()
@@ -26,6 +27,7 @@ Function start($option : Object) : 4D:C1709.SystemWorker
 	End case 
 	
 	var $command : Text
+	var $isStream : Boolean  //always False: the server is not given a stream
 	$command:=This:C1470.escape(This:C1470.executablePath)
 	
 	$command+=" --server --v2 "

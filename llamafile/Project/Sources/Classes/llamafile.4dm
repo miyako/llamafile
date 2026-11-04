@@ -13,6 +13,8 @@ Class constructor($port : Integer; $file : 4D:C1709.File; $URL : Text; $event : 
 embeddings
 */
 			
+			var $llamafile : cs:C1710.llamafile
+			
 			$file:=$homeFolder.file("nomic-embed-text-v1.Q8_0.gguf")
 			$URL:="https://huggingface.co/nomic-ai/nomic-embed-text-v1-GGUF/resolve/main/nomic-embed-text-v1.Q8_0.gguf"
 			$port:=8080
@@ -22,7 +24,7 @@ embeddings
 chat completion (with images)
 */
 			
-			$file:=$homeFolder.file("Qwen2-VL-2B-Instruct-Q4_K_M")
+			$file:=$homeFolder.file("Qwen2-VL-2B-Instruct-Q4_K_M.gguf")
 			$URL:="https://huggingface.co/bartowski/Qwen2-VL-2B-Instruct-GGUF/resolve/main/Qwen2-VL-2B-Instruct-Q4_K_M.gguf"
 			$port:=8081
 			$llamafile:=cs:C1710.llamafile.new($port; $file; $URL; $event)
