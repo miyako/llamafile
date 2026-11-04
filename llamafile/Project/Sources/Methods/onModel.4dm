@@ -8,8 +8,9 @@ Else
 	var $error : cs:C1710.event.error
 	$error:=cs:C1710.event.error.new(2; "failed to load model!"; This:C1470.models())
 	
-	If ($options.event#Null:C1517) && (OB Instance of:C1731($options.event; cs:C1710.event.event))
-		$options.event.onError.call(This:C1470; $options; $error)
+	//This is the _Model that failed; the event is not part of the server options
+	If (This:C1470.event#Null:C1517) && (OB Instance of:C1731(This:C1470.event; cs:C1710.event.event))
+		This:C1470.event.onError.call(This:C1470; $options; $error)
 	End if 
 	
 	var $workers : cs:C1710.workers.workers
