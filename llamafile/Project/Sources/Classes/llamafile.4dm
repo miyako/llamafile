@@ -27,6 +27,9 @@ chat completion (with images)
 			$port:=8081
 			$llamafile:=cs:C1710.llamafile.new($port; $file; $URL; $event)
 			
+			//the default models are launched by the calls above; do not launch the last one again
+			return 
+			
 		End if 
 		
 		If ($port=0) || ($port<0) || ($port>65535)
