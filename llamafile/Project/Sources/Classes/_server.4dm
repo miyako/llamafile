@@ -8,14 +8,25 @@ Function start($option : Object) : 4D:C1709.SystemWorker
 	
 	This:C1470.bind($option; ["onTerminate"])
 	
-	var $modelsFolder; $copyFolder : 4D:C1709.Folder
+	//one copy per binary: a component update gets a new folder and never replaces a running executable
+	var $modelsFolder; $copyFolder; $tempFolder : 4D:C1709.Folder
 	$modelsFolder:=Folder:C1567(fk home folder:K87:24).folder(".llamafile")
-	$copyFolder:=$modelsFolder
-	$copyFolder.create()
+	var $executable : Blob
+	$executable:=This:C1470.executableFile.getContent()
+	var $digest : Text
+	$digest:=Generate digest:C1147($executable; SHA256 digest:K66:4)
+	$copyFolder:=$modelsFolder.folder("bin").folder($digest)
 	var $that : 4D:C1709.File
 	$that:=$copyFolder.file(This:C1470.executableFile.fullName)
 	If (Not:C34($that.exists))
-		$that:=This:C1470.executableFile.copyTo($copyFolder)
+		//copy under a temporary name so that an interrupted copy is never used
+		$tempFolder:=$modelsFolder.folder("bin").folder($digest+".tmp")
+		If ($tempFolder.exists)
+			$tempFolder.delete(Delete with contents:K24:24)
+		End if 
+		$tempFolder.create()
+		This:C1470.executableFile.copyTo($tempFolder)
+		$tempFolder.rename($digest)
 	End if 
 	This:C1470.controller.currentDirectory:=$that.parent
 	This:C1470._executableFile:=$that

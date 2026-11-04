@@ -71,6 +71,8 @@ If the component already started a server on the port, the constructor does noth
 1. The specified model is downloaded via HTTP, unless the file already exists
 2. The `llamafiler` program is started (the process name is `.ape-1.10`)
 
+The program runs from a copy in `~/.llamafile/bin/{SHA-256 of the program}/`. A component update with a different program gets a new folder, so a running server is never replaced; older folders (and the `~/.llamafile/llamafiler` copy used by earlier versions) can be deleted when no server uses them.
+
 `onSuccess` means that the launch was requested, not that the server is ready to accept requests; poll an endpoint such as `/v1/models` until it responds. If the model cannot be downloaded (failed `HEAD`, an unsuccessful `GET` or a network error), `event.onError` receives an error with code `2` and the server is not started. The model is downloaded to a temporary `{name}.download` file in the same folder and renamed only when the download is complete, so an interrupted download is never taken for the model.
 
 `event` may be omitted or `Null`, in which case no callbacks are delivered. Without arguments (or without a valid `$file` and `$URL`), the constructor starts the default models: an embedding model on port `8080` and a chat completion model on port `8081`, each launched once and skipped when already started on its port. The example above starts its own models on the same ports. The server's stdout/stderr are intentionally not forwarded to `event` (a long-running server can produce a large amount of output); `onData` and `onResponse` report the model download only.
