@@ -18,10 +18,10 @@ layout: default
 Instantiate `cs.llamafile.llamafile` in your *On Startup* database method:
 
 ```4d
-var $llama : cs.llamafile.llamafile
+var $llamafile : cs.llamafile.llamafile
 
 If (False)
-    $llama:=cs.llamafile.llamafile.new()  //default
+    $llamafile:=cs.llamafile.llamafile.new()  //default
 Else 
     var $homeFolder : 4D.Folder
     $homeFolder:=Folder(fk home folder).folder(".llamafile")
@@ -40,7 +40,7 @@ Else
     */
     
     $event.onError:=Formula(ALERT($2.message))
-    $event.onSuccess:=Formula(ALERT($2.models.extract("name").join(",")+" loaded!"))
+    $event.onSuccess:=Formula(ALERT($2.models.extract("name").join(",")+" launch requested"))  //not yet ready; poll /v1/models
     $event.onData:=Formula(LOG EVENT(Into 4D debug message; "download:"+String((This.range.end/This.range.length)*100; "###.00%")))
     $event.onResponse:=Formula(LOG EVENT(Into 4D debug message; "download complete"))
     $event.onTerminate:=Formula(LOG EVENT(Into 4D debug message; (["process"; $1.pid; "terminated!"].join(" "))))
@@ -51,25 +51,31 @@ Else
     
     $file:=$homeFolder.file("nomic-embed-text-v1.Q8_0.gguf")
     $URL:="https://huggingface.co/nomic-ai/nomic-embed-text-v1-GGUF/resolve/main/nomic-embed-text-v1.Q8_0.gguf"
-    $port:=8086
+    $port:=8080
     $llamafile:=cs.llamafile.llamafile.new($port; $file; $URL; $event)
     
     /*
-        chat completion (with images)
+        chat completion
     */
     
     $file:=$homeFolder.file("Llama-3.1-8B-Instruct-Q4_K_M.gguf")
     $URL:="https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"
-    $port:=8087
+    $port:=8081
     $llamafile:=cs.llamafile.llamafile.new($port; $file; $URL; $event)
     
 End if  
 ```
 
-Unless the server is already running (in which case the costructor does nothing), the following procedure runs in the background:
+If the component already started a server on the port, the constructor does nothing. If the TCP port is used by another process, `event.onError` receives an error with code `1` and nothing is started. Otherwise the following procedure runs in the background:
 
-1. The specified model is downloaded via HTTP
+1. The specified model is downloaded via HTTP, unless the file already exists
 2. The `llamafiler` program is started (the process name is `.ape-1.10`)
+
+The program runs from a copy in `~/.llamafile/bin/{SHA-256 of the program}/`. A component update with a different program gets a new folder, so a running server is never replaced; older folders (and the `~/.llamafile/llamafiler` copy used by earlier versions) can be deleted when no server uses them.
+
+`onSuccess` means that the launch was requested, not that the server is ready to accept requests; poll an endpoint such as `/v1/models` until it responds. If the model cannot be downloaded (failed `HEAD`, an unsuccessful `GET` or a network error), `event.onError` receives an error with code `2` and the server is not started. The model is downloaded to a temporary `{name}.download` file in the same folder and renamed only when the download is complete, so an interrupted download is never taken for the model.
+
+`event` may be omitted or `Null`, in which case no callbacks are delivered. Without arguments (or without a valid `$file` and `$URL`), the constructor starts the default models: an embedding model on port `8080` and a chat completion model on port `8081`, each launched once and skipped when already started on its port. The example above starts its own models on the same ports. The server's stdout/stderr are intentionally not forwarded to `event` (a long-running server can produce a large amount of output); `onData` and `onResponse` report the model download only.
 
 Now you can test the server:
 
@@ -96,10 +102,11 @@ $responseEmbeddings:=$AIClient.embeddings.create($text)
 Finally to terminate the server:
 
 ```4d
-var $llama : cs.llamafile.llamafile
-$llama:=cs.llamafile.llamafile.new()
-$llama.terminate()
+//$llamafile is an instance created as above
+$llamafile.terminate()
 ```
+
+`terminate()` stops every server started by the component. Call it on an instance you already have: `cs.llamafile.llamafile.new()` without arguments is not a lightweight handle, it starts the default models on ports `8080` and `8081` unless those ports are in use.
 
 #### AI Kit compatibility
 
